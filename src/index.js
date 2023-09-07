@@ -5,5 +5,5 @@ import App from './components/app'
 
 import './index.css'
 
-const root = ReactDOM.createRoot(document.querySelector('#root'))
+const root = ReactDOM.createRoot(document.querySelector('.container'))
 root.render(<App />)
