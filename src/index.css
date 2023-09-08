@@ -9,6 +9,7 @@ html {
 }
 
 body {
+  height: 100vh;
   font-family: 'Inter', sans-serif;
   color: #111111;
   background-color: #f7f7f7;
@@ -44,7 +45,7 @@ ul {
 
 .container {
   max-width: 1010px;
+  min-height: 100vh;
   margin: 0 auto;
   background-color: #fff;
-  min-height: 100vh;
 }
