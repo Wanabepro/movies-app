@@ -2,11 +2,11 @@ import React from 'react'
 
 import Film from '../film'
 
-import './filmList.css'
+import './filmsList.css'
 
 function FilmsList({ films }) {
   return (
-    <ul className="filmList">
+    <ul className="filmsList">
       {films.map((film) => (
         <li key={film.id}>
           <Film {...film} />

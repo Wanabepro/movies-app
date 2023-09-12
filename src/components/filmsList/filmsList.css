@@ -1,6 +1,6 @@
-.filmList {
-  padding: 21px 32px;
+.filmsList {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 36px;
+  gap: 3.6rem;
+  margin-bottom: 3.6rem;
 }
