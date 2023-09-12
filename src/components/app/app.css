@@ -3,6 +3,13 @@
   height: 100vh;
 }
 
+.search-message {
+  width: fit-content;
+  margin: 0 auto;
+  font-size: 8rem;
+  color: #827e7e;
+}
+
 .pagination {
   width: fit-content;
   margin: 0 auto;

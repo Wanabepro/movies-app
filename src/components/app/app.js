@@ -15,33 +15,21 @@ class App extends Component {
   state = {
     searchString: '',
     films: [],
-    isLoading: true,
+    isLoading: false,
     error: {
       isError: false,
       errorMessage: null,
     },
     pagesCount: 1,
-  }
-
-  componentDidMount() {
-    this.fetchFilms()
+    page: 1,
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { searchString } = this.state
 
     if (prevState.searchString !== searchString) {
+      this.setState({ page: 1 })
       this.onFilmSearch(searchString)
-    }
-  }
-
-  fetchFilms = async () => {
-    try {
-      this.api.searchFilm('')
-      const { films, pagesCount } = await this.api.getFilms(1)
-      this.setState({ films, pagesCount, isLoading: false })
-    } catch (error) {
-      this.setState({ isLoading: false, error: { isError: true, errorMessage: error.message } })
     }
   }
 
@@ -61,18 +49,22 @@ class App extends Component {
   }
 
   onPageChange = (page) => {
+    this.setState({ page })
     this.onFilmSearch(this.state.searchString, page)
   }
 
   render() {
     const {
+      searchString,
       films,
       isLoading,
       error: { isError, errorMessage },
       pagesCount,
+      page,
     } = this.state
 
     const paginationProps = {
+      current: page,
       hideOnSinglePage: true,
       showSizeChanger: false,
       defaultCurrent: 1,
@@ -84,7 +76,11 @@ class App extends Component {
       <>
         <Filter />
         <Search onSearchStringChange={debounce(this.onSearchStringChange, 500)} />
-        {!(isLoading || isError) && <FilmsList films={films} />}
+        {!(isLoading || isError) && Boolean(films.length) && <FilmsList films={films} />}
+        {!films.length && !isLoading && Boolean(searchString.length) && (
+          <h1 className="search-message">Nothing found</h1>
+        )}
+        {!films.length && !isLoading && !searchString.length && <h1 className="search-message">Search something</h1>}
         {isLoading && (
           <Spin size="large" tip="Films loading...">
             <div className="content" />

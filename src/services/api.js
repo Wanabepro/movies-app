@@ -31,22 +31,6 @@ class Api {
     }
   }
 
-  async getFilms(page) {
-    const options = {
-      ...this.commonOptions,
-      method: 'GET',
-    }
-
-    const genres = await this.#getGenres()
-    const { results, total_pages: pagesCount } = await Api.fetchResource(
-      `${this.baseUrl}/movie/popular?language=en-US&page=${page}`,
-      options,
-    )
-    const films = Api.#transformFilms(results, genres)
-
-    return { films, pagesCount }
-  }
-
   async searchFilm(filmName, page = 1) {
     const options = {
       ...this.commonOptions,

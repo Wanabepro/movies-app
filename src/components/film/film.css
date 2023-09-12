@@ -39,4 +39,11 @@
 
 .film__description {
   font-size: 1.2rem;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.film__description::-webkit-scrollbar {
+  display: none;
 }
