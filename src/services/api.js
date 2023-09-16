@@ -37,30 +37,30 @@ class Api {
       method: 'GET',
     }
 
-    const genres = await this.#getGenres()
     const { results, total_pages: pagesCount } = await Api.fetchResource(
       `${this.baseUrl}/search/movie?query=${filmName}&include_adult=false&language=en-US&page=${page}`,
       options,
     )
-    const films = Api.#transformFilms(results, genres)
+    const films = Api.#transformFilms(results)
 
     return { films, pagesCount }
   }
 
-  async #getGenres() {
+  async getGenres() {
     const options = {
       ...this.commonOptions,
       method: 'GET',
     }
 
     const { genres } = await Api.fetchResource(`${this.baseUrl}/genre/movie/list?language=en`, options)
-    return genres
+    const genresEntries = genres.map(({ id, name }) => [id, name])
+    return Object.fromEntries(genresEntries)
   }
 
-  static #transformFilms(films, genres) {
+  static #transformFilms(films) {
     return films.map((film) => ({
       id: film.id,
-      genres: film.genre_ids.map((genreId) => genres.find((genre) => genre.id === genreId).name),
+      genres: film.genre_ids,
       title: film.title,
       overview: film.overview,
       posterPath: film.poster_path,

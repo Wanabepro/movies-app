@@ -30,9 +30,9 @@ function Film({ posterPath, title, overview, releaseDate, genres, rating }) {
         </header>
         {formatedDate && <span className="film__date">{formatedDate}</span>}
         <ul className="film__genres">
-          {genres.map((genre) => (
-            <li key={genre}>
-              <FilmGenre genre={genre} />
+          {genres.map((genreId) => (
+            <li key={genreId}>
+              <FilmGenre genreId={genreId} />
             </li>
           ))}
         </ul>

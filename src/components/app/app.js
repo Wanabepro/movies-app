@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import debounce from 'lodash.debounce'
 import { Alert, Spin, Pagination } from 'antd'
 
+import { GenresProvider } from '../../services/genresContext'
 import Api from '../../services/api'
 import FilmsList from '../filmsList'
 import Filter from '../filter'
@@ -11,6 +12,8 @@ import './app.css'
 
 class App extends Component {
   api = new Api()
+
+  genres = {}
 
   state = {
     searchString: '',
@@ -22,6 +25,12 @@ class App extends Component {
     },
     pagesCount: 1,
     page: 1,
+  }
+
+  componentDidMount() {
+    this.api.getGenres().then((genres) => {
+      this.genres = genres
+    })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -73,7 +82,7 @@ class App extends Component {
     }
 
     return (
-      <>
+      <GenresProvider value={this.genres}>
         <Filter />
         <Search onSearchStringChange={debounce(this.onSearchStringChange, 500)} />
         {!(isLoading || isError) && Boolean(films.length) && <FilmsList films={films} />}
@@ -90,7 +99,7 @@ class App extends Component {
         <div className="pagination">
           <Pagination {...paginationProps} />
         </div>
-      </>
+      </GenresProvider>
     )
   }
 }
