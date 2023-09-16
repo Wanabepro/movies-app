@@ -28,9 +28,14 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.api.getGenres().then((genres) => {
-      this.genres = genres
-    })
+    this.api
+      .getGenres()
+      .then((genres) => {
+        this.genres = genres
+      })
+      .catch((error) => {
+        this.setState({ error: { isError: true, errorMessage: error.message } })
+      })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -89,7 +94,9 @@ class App extends Component {
         {!films.length && !isLoading && Boolean(searchString.length) && (
           <h1 className="search-message">Nothing found</h1>
         )}
-        {!films.length && !isLoading && !searchString.length && <h1 className="search-message">Search something</h1>}
+        {!films.length && !isLoading && !isError && !searchString.length && (
+          <h1 className="search-message">Search something</h1>
+        )}
         {isLoading && (
           <Spin size="large" tip="Films loading...">
             <div className="content" />

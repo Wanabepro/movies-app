@@ -71,6 +71,11 @@
   justify-content: space-between;
 }
 
-:where(.css-dev-only-do-not-override-nnuwmp).ant-rate .ant-rate-star:not(:last-child) {
+:where(.css-dev-only-do-not-override-nnuwmp).ant-rate .ant-rate-star:not(:last-child),
+:where(.css-nnuwmp).ant-rate .ant-rate-star:not(:last-child) {
   margin-inline-end: auto;
+}
+
+:where(.css-nnuwmp).ant-rate .ant-rate-star:not(:last-child) {
+  margin-inline-end: 8px;
 }

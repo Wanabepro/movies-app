@@ -27,8 +27,20 @@ class Api {
       if (error.message === 'Failed to fetch') {
         throw new Error('Could not fetch anything. Check Your internet connection.')
       }
+
       throw new Error(error.message)
     }
+  }
+
+  async getGenres() {
+    const options = {
+      ...this.commonOptions,
+      method: 'GET',
+    }
+
+    const { genres } = await Api.fetchResource(`${this.baseUrl}/genre/movie/list?language=en`, options)
+
+    return Api.#transformGenres(genres)
   }
 
   async searchFilm(filmName, page = 1) {
@@ -46,17 +58,6 @@ class Api {
     return { films, pagesCount }
   }
 
-  async getGenres() {
-    const options = {
-      ...this.commonOptions,
-      method: 'GET',
-    }
-
-    const { genres } = await Api.fetchResource(`${this.baseUrl}/genre/movie/list?language=en`, options)
-    const genresEntries = genres.map(({ id, name }) => [id, name])
-    return Object.fromEntries(genresEntries)
-  }
-
   static #transformFilms(films) {
     return films.map((film) => ({
       id: film.id,
@@ -67,6 +68,11 @@ class Api {
       releaseDate: film.release_date,
       rating: film.vote_average,
     }))
+  }
+
+  static #transformGenres(genres) {
+    const genresEntries = genres.map(({ id, name }) => [id, name])
+    return Object.fromEntries(genresEntries)
   }
 }
 
