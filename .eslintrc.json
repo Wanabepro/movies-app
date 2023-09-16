@@ -26,7 +26,7 @@
   },
   "plugins": ["react", "prettier", "import"],
   "rules": {
-    "operator-linebreak": ["error", "after"],
+    "operator-linebreak": ["error", "after", { "overrides": { "?": "before", ":": "before" }}],
     "object-curly-newline": "off",
     "react/static-property-placement": ["error", "static public field"],
     "react/state-in-constructor": ["error", "never"],

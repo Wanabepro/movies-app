@@ -21,8 +21,24 @@
 }
 
 .film__header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.film__heading {
   font-weight: 400;
   font-size: 2rem;
+  width: 80%;
+}
+
+.film__rating {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50%;
+  border: 2px solid #000;
+  font-size: 1.2rem;
+  line-height: 3rem;
+  text-align: center;
 }
 
 .film__date {
@@ -38,6 +54,7 @@
 }
 
 .film__description {
+  flex-grow: 1;
   font-size: 1.2rem;
   overflow-y: auto;
   -ms-overflow-style: none;
@@ -46,4 +63,14 @@
 
 .film__description::-webkit-scrollbar {
   display: none;
+}
+
+.rate {
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+:where(.css-dev-only-do-not-override-nnuwmp).ant-rate .ant-rate-star:not(:last-child) {
+  margin-inline-end: auto;
 }
