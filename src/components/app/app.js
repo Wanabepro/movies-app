@@ -1,111 +1,67 @@
 import React, { Component } from 'react'
-import debounce from 'lodash.debounce'
-import { Alert, Spin, Pagination } from 'antd'
+import { Alert, Tabs } from 'antd'
 
 import { GenresProvider } from '../../services/genresContext'
 import Api from '../../services/api'
-import FilmsList from '../filmsList'
-import Filter from '../filter'
-import Search from '../search'
+import SearchTab from '../searchTab'
+import RatedTab from '../ratedTab'
 
 import './app.css'
 
 class App extends Component {
   api = new Api()
 
-  genres = {}
-
   state = {
-    searchString: '',
-    films: [],
-    isLoading: false,
     error: {
       isError: false,
-      errorMessage: null,
+      errorMessage: '',
     },
-    pagesCount: 1,
-    page: 1,
+    genres: {},
   }
 
   componentDidMount() {
     this.api
       .getGenres()
       .then((genres) => {
-        this.genres = genres
+        this.setState({ genres })
       })
       .catch((error) => {
         this.setState({ error: { isError: true, errorMessage: error.message } })
       })
-  }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { searchString } = this.state
-
-    if (prevState.searchString !== searchString) {
-      this.setState({ page: 1 })
-      this.onFilmSearch(searchString)
-    }
-  }
-
-  onSearchStringChange = (searchString) => {
-    this.setState({ searchString })
-  }
-
-  onFilmSearch = async (filmName, page = 1) => {
-    this.setState({ isLoading: true })
-
-    try {
-      const { films, pagesCount } = await this.api.searchFilm(filmName, page)
-      this.setState({ films, pagesCount, isLoading: false })
-    } catch (error) {
-      this.setState({ isLoading: false, error: { isError: true, errorMessage: error.message } })
-    }
-  }
-
-  onPageChange = (page) => {
-    this.setState({ page })
-    this.onFilmSearch(this.state.searchString, page)
+    this.api.createGuestSession()
   }
 
   render() {
     const {
-      searchString,
-      films,
-      isLoading,
       error: { isError, errorMessage },
-      pagesCount,
-      page,
+      genres,
     } = this.state
 
-    const paginationProps = {
-      current: page,
-      hideOnSinglePage: true,
-      showSizeChanger: false,
-      defaultCurrent: 1,
-      total: pagesCount,
-      onChange: this.onPageChange,
-    }
+    const items = [
+      {
+        key: '1',
+        label: 'Search',
+        children: <SearchTab api={this.api} />,
+      },
+      {
+        key: '2',
+        label: 'Rated',
+        children: <RatedTab api={this.api} />,
+      },
+    ]
 
     return (
-      <GenresProvider value={this.genres}>
-        <Filter />
-        <Search onSearchStringChange={debounce(this.onSearchStringChange, 500)} />
-        {!(isLoading || isError) && Boolean(films.length) && <FilmsList films={films} />}
-        {!films.length && !isLoading && Boolean(searchString.length) && (
-          <h1 className="search-message">Nothing found</h1>
-        )}
-        {!films.length && !isLoading && !isError && !searchString.length && (
-          <h1 className="search-message">Search something</h1>
-        )}
-        {isLoading && (
-          <Spin size="large" tip="Films loading...">
-            <div className="content" />
-          </Spin>
-        )}
+      <GenresProvider value={genres}>
         {isError && <Alert message="Something goes wrong" description={errorMessage} type="error" closable showIcon />}
-        <div className="pagination">
-          <Pagination {...paginationProps} />
-        </div>
+        <Tabs
+          centered
+          defaultActiveKey="1"
+          destroyInactiveTabPane
+          items={items}
+          tabBarGutter={16}
+          tabBarStyle={{ fontFamily: '"Inter", sans-serif', fontSize: '1.4rem' }}
+        />
       </GenresProvider>
     )
   }

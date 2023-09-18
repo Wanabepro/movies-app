@@ -1,16 +1,16 @@
 class Api {
   baseUrl = 'https://api.themoviedb.org/3'
 
-  // eslint-disable-next-line prettier/prettier
-  token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5OTg0Y2ExYzRiMjJkNzUyZGEwMDEwZDI5NWVlMzE4YiIsInN1YiI6IjY0Zjg2YzQzZTBjYTdmMDBlYzg5ZTgzNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.KZ1OtWtfpYsOPXdakScA01_cOmdUohkt-LzyRO83AoM'
+  apiKey = '9984ca1c4b22d752da0010d295ee318b'
 
   commonOptions = {
     headers: {
       accept: 'application/json',
-      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json;charset=utf-8',
     },
   }
+
+  sessionId
 
   static async fetchResource(url, options = {}) {
     try {
@@ -32,13 +32,80 @@ class Api {
     }
   }
 
+  async createGuestSession() {
+    const options = {
+      ...this.commonOptions,
+      method: 'GET',
+    }
+
+    const { guest_session_id: sessionId } = await Api.fetchResource(
+      `${this.baseUrl}/authentication/guest_session/new?api_key=${this.apiKey}`,
+      options,
+    )
+
+    this.sessionId = sessionId
+  }
+
+  rateMovie = async (movieId, rating) => {
+    if (rating === 0) {
+      return this.unrateMovie(movieId)
+    }
+    const options = {
+      ...this.commonOptions,
+      method: 'POST',
+      body: JSON.stringify({ value: rating }),
+    }
+
+    const response = await Api.fetchResource(
+      `${this.baseUrl}/movie/${movieId}/rating?api_key=${this.apiKey}&guest_session_id=${this.sessionId}`,
+      options,
+    )
+
+    console.log(response)
+
+    return response
+  }
+
+  unrateMovie = async (movieId) => {
+    const options = {
+      ...this.commonOptions,
+      method: 'DELETE',
+    }
+
+    const response = await Api.fetchResource(
+      `${this.baseUrl}/movie/${movieId}/rating?api_key=${this.apiKey}&guest_session_id=${this.sessionId}`,
+      options,
+    )
+
+    console.log(response)
+  }
+
+  async getRatedMovies(page = 1) {
+    const options = {
+      ...this.commonOptions,
+      method: 'GET',
+    }
+
+    const { results, total_pages: pagesCount } = await Api.fetchResource(
+      `${this.baseUrl}/guest_session/${this.sessionId}/rated/movies?api_key=${this.apiKey}&language=en-US&page=${page}&sort_by=created_at.asc`,
+      options,
+    )
+    console.log(results)
+    const films = Api.#transformFilms(results)
+
+    return { films, pagesCount }
+  }
+
   async getGenres() {
     const options = {
       ...this.commonOptions,
       method: 'GET',
     }
 
-    const { genres } = await Api.fetchResource(`${this.baseUrl}/genre/movie/list?language=en`, options)
+    const { genres } = await Api.fetchResource(
+      `${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=en`,
+      options,
+    )
 
     return Api.#transformGenres(genres)
   }
@@ -50,7 +117,7 @@ class Api {
     }
 
     const { results, total_pages: pagesCount } = await Api.fetchResource(
-      `${this.baseUrl}/search/movie?query=${filmName}&include_adult=false&language=en-US&page=${page}`,
+      `${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${filmName}&include_adult=false&language=en-US&page=${page}`,
       options,
     )
     const films = Api.#transformFilms(results)
@@ -67,6 +134,7 @@ class Api {
       posterPath: film.poster_path,
       releaseDate: film.release_date,
       rating: film.vote_average,
+      myRating: film.rating || 0,
     }))
   }
 

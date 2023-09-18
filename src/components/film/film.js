@@ -7,8 +7,13 @@ import FilmGenre from '../filmGenre'
 
 import './film.css'
 
-function Film({ posterPath, title, overview, releaseDate, genres, rating }) {
+// eslint-disable-next-line max-len
+function Film({ id, posterPath, title, overview, releaseDate, genres, rating, myRating, rateMovie }) {
   const formatedDate = releaseDate ? format(new Date(releaseDate), 'MMMM d, yyyy', { weekStartsOn: 1 }) : null
+
+  const onRatingChange = (value) => {
+    rateMovie(id, value)
+  }
 
   return (
     <article className="film">
@@ -37,7 +42,7 @@ function Film({ posterPath, title, overview, releaseDate, genres, rating }) {
           ))}
         </ul>
         <p className="film__description">{overview}</p>
-        <Rate className="rate" count={10} />
+        <Rate className="rate" count={10} defaultValue={myRating} onChange={onRatingChange} />
       </section>
     </article>
   )
