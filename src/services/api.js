@@ -58,6 +58,7 @@ class Api {
 
   rateMovie = async (movieId, rating) => {
     if (rating === 0) {
+      localStorage.removeItem(movieId)
       return this.unrateMovie(movieId)
     }
     const options = {
@@ -70,6 +71,8 @@ class Api {
       `${this.baseUrl}/movie/${movieId}/rating?api_key=${this.apiKey}&guest_session_id=${this.sessionId}`,
       options,
     )
+
+    localStorage.setItem(movieId, rating)
 
     return response
   }
@@ -141,7 +144,6 @@ class Api {
       posterPath: film.poster_path,
       releaseDate: film.release_date,
       rating: film.vote_average,
-      myRating: film.rating || 0,
     }))
   }
 
