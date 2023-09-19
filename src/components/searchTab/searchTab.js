@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import debounce from 'lodash.debounce'
-import { Alert, Spin, Pagination } from 'antd'
+import { Alert, Spin } from 'antd'
 
 import Search from '../search'
 import FilmsList from '../filmsList'
+import Pagination from '../pagination'
 
 class SearchTab extends Component {
   state = {
@@ -60,10 +61,6 @@ class SearchTab extends Component {
 
     const paginationProps = {
       current: page,
-      hideOnSinglePage: true,
-      showSizeChanger: false,
-      defaultCurrent: 1,
-      pageSize: 20,
       total: filmsCount,
       onChange: this.onPageChange,
     }
@@ -89,9 +86,7 @@ class SearchTab extends Component {
           </Spin>
         )}
         {isError && <Alert message="Something goes wrong" description={errorMessage} type="error" closable showIcon />}
-        <div className="pagination">
-          <Pagination {...paginationProps} />
-        </div>
+        <Pagination {...paginationProps} />
       </>
     )
   }

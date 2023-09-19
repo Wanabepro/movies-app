@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Alert, Spin, Pagination } from 'antd'
+import { Alert, Spin } from 'antd'
 
 import FilmsList from '../filmsList'
+import Pagination from '../pagination'
 
 class RatedTab extends Component {
   state = {
@@ -47,10 +48,6 @@ class RatedTab extends Component {
 
     const paginationProps = {
       current: page,
-      hideOnSinglePage: true,
-      showSizeChanger: false,
-      defaultCurrent: 1,
-      pageSize: 20,
       total: filmsCount,
       onChange: this.onPageChange,
     }
@@ -70,9 +67,7 @@ class RatedTab extends Component {
           </Spin>
         )}
         {isError && <Alert message="Something goes wrong" description={errorMessage} type="error" closable showIcon />}
-        <div className="pagination">
-          <Pagination {...paginationProps} />
-        </div>
+        <Pagination {...paginationProps} />
       </>
     )
   }
