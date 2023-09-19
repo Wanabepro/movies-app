@@ -46,15 +46,15 @@ class RatedTab extends Component {
       page,
     } = this.state
 
+    const filmsListProps = {
+      films,
+      rateMovie: api.rateMovie,
+    }
+
     const paginationProps = {
       current: page,
       total: filmsCount,
       onChange: this.onPageChange,
-    }
-
-    const filmsListProps = {
-      films,
-      rateMovie: api.rateMovie,
     }
 
     return (

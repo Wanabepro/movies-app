@@ -33,17 +33,27 @@ class Api {
   }
 
   async createGuestSession() {
-    const options = {
-      ...this.commonOptions,
-      method: 'GET',
+    const sessionEnd = new Date(localStorage.getItem('expiresAt')).getTime()
+    const now = new Date().getTime()
+
+    if (now <= sessionEnd) {
+      this.sessionId = localStorage.getItem('sessionId')
+    } else {
+      const options = {
+        ...this.commonOptions,
+        method: 'GET',
+      }
+
+      const { guest_session_id: sessionId, expires_at: expiresAt } = await Api.fetchResource(
+        `${this.baseUrl}/authentication/guest_session/new?api_key=${this.apiKey}`,
+        options,
+      )
+
+      localStorage.setItem('expiresAt', expiresAt)
+      localStorage.setItem('sessionId', sessionId)
+
+      this.sessionId = sessionId
     }
-
-    const { guest_session_id: sessionId } = await Api.fetchResource(
-      `${this.baseUrl}/authentication/guest_session/new?api_key=${this.apiKey}`,
-      options,
-    )
-
-    this.sessionId = sessionId
   }
 
   rateMovie = async (movieId, rating) => {

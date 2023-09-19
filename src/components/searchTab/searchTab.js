@@ -59,22 +59,22 @@ class SearchTab extends Component {
       page,
     } = this.state
 
+    const filmsListProps = {
+      films,
+      rateMovie: api.rateMovie,
+    }
+
     const paginationProps = {
       current: page,
       total: filmsCount,
       onChange: this.onPageChange,
     }
 
-    const filmsListProps = {
-      films,
-      rateMovie: api.rateMovie,
-    }
-
     return (
       <>
         <Search onSearchStringChange={debounce(this.onSearchStringChange, 500)} />
         {!(isLoading || isError) && Boolean(films.length) && <FilmsList {...filmsListProps} />}
-        {!films.length && !isLoading && Boolean(searchString.length) && (
+        {!films.length && !isLoading && !isError && Boolean(searchString.length) && (
           <h1 className="search-message">Nothing found</h1>
         )}
         {!films.length && !isLoading && !isError && !searchString.length && (
