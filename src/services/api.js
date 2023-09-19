@@ -61,8 +61,6 @@ class Api {
       options,
     )
 
-    console.log(response)
-
     return response
   }
 
@@ -77,7 +75,7 @@ class Api {
       options,
     )
 
-    console.log(response)
+    return response
   }
 
   async getRatedMovies(page = 1) {
@@ -86,14 +84,13 @@ class Api {
       method: 'GET',
     }
 
-    const { results, total_pages: pagesCount } = await Api.fetchResource(
+    const { results, total_results: filmsCount } = await Api.fetchResource(
       `${this.baseUrl}/guest_session/${this.sessionId}/rated/movies?api_key=${this.apiKey}&language=en-US&page=${page}&sort_by=created_at.asc`,
       options,
     )
-    console.log(results)
     const films = Api.#transformFilms(results)
 
-    return { films, pagesCount }
+    return { films, filmsCount }
   }
 
   async getGenres() {
@@ -116,13 +113,13 @@ class Api {
       method: 'GET',
     }
 
-    const { results, total_pages: pagesCount } = await Api.fetchResource(
+    const { results, total_results: filmsCount } = await Api.fetchResource(
       `${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${filmName}&include_adult=false&language=en-US&page=${page}`,
       options,
     )
     const films = Api.#transformFilms(results)
 
-    return { films, pagesCount }
+    return { films, filmsCount }
   }
 
   static #transformFilms(films) {

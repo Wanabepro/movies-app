@@ -14,7 +14,7 @@ class SearchTab extends Component {
       isError: false,
       errorMessage: null,
     },
-    pagesCount: 1,
+    filmsCount: 1,
     page: 1,
   }
 
@@ -35,8 +35,8 @@ class SearchTab extends Component {
     this.setState({ isLoading: true })
 
     try {
-      const { films, pagesCount } = await this.props.api.searchFilm(filmName, page)
-      this.setState({ films, pagesCount, isLoading: false })
+      const { films, filmsCount } = await this.props.api.searchFilm(filmName, page)
+      this.setState({ films, filmsCount, isLoading: false })
     } catch (error) {
       this.setState({ isLoading: false, error: { isError: true, errorMessage: error.message } })
     }
@@ -54,7 +54,7 @@ class SearchTab extends Component {
       films,
       isLoading,
       error: { isError, errorMessage },
-      pagesCount,
+      filmsCount,
       page,
     } = this.state
 
@@ -63,7 +63,8 @@ class SearchTab extends Component {
       hideOnSinglePage: true,
       showSizeChanger: false,
       defaultCurrent: 1,
-      total: pagesCount,
+      pageSize: 20,
+      total: filmsCount,
       onChange: this.onPageChange,
     }
 
