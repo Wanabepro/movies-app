@@ -20,8 +20,11 @@ class Film extends Component {
 
   onRatingChange = async (value) => {
     this.setState({ isLoading: true })
-
-    await this.props.rateMovie(this.props.id, value)
+    try {
+      await this.props.rateMovie(this.props.id, value)
+    } catch (error) {
+      this.props.onRatingError(error)
+    }
 
     this.setState({ myRating: value })
     this.setState({ isLoading: false })

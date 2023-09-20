@@ -48,6 +48,10 @@ class SearchTab extends Component {
     this.onFilmSearch(this.state.searchString, page)
   }
 
+  onRatingError = (error) => {
+    this.setState({ error: { isError: true, errorMessage: error.message } })
+  }
+
   render() {
     const { api } = this.props
     const {
@@ -62,6 +66,7 @@ class SearchTab extends Component {
     const filmsListProps = {
       films,
       rateMovie: api.rateMovie,
+      onRatingError: this.onRatingError,
     }
 
     const paginationProps = {
