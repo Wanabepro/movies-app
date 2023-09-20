@@ -35,33 +35,37 @@ class Film extends Component {
 
     return (
       <article className="film">
-        <header className="film__mobile-header">
-          <img
-            className="film__mobile-poster"
-            src={
-              posterPath
-                ? `https://image.tmdb.org/t/p/original/${posterPath}`
-                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYA8-qGTLi1IgFbY7XZHm0Fjd2qYUFBrvlZw&usqp=CAU'
-            }
-            alt="Film poster"
-          />
-          <div>
-            <div className="film__header">
-              <h2 className="film__heading">{title}</h2>
-              <div className="film__rating" style={{ borderColor: ratingColorResolver(rating) }}>
-                {rating.toFixed(1)}
+        <div className="film__mobile-container">
+          <header className="film__mobile-header">
+            <img
+              className="film__mobile-poster"
+              src={
+                posterPath
+                  ? `https://image.tmdb.org/t/p/original/${posterPath}`
+                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYA8-qGTLi1IgFbY7XZHm0Fjd2qYUFBrvlZw&usqp=CAU'
+              }
+              alt="Film poster"
+            />
+            <div>
+              <div className="film__header">
+                <h2 className="film__heading">{title}</h2>
+                <div className="film__rating" style={{ borderColor: ratingColorResolver(rating) }}>
+                  {rating.toFixed(1)}
+                </div>
               </div>
+              {formatedDate && <span className="film__date">{formatedDate}</span>}
+              <ul className="film__genres">
+                {genres.map((genreId) => (
+                  <li key={genreId}>
+                    <FilmGenre genreId={genreId} />
+                  </li>
+                ))}
+              </ul>
             </div>
-            {formatedDate && <span className="film__date">{formatedDate}</span>}
-            <ul className="film__genres">
-              {genres.map((genreId) => (
-                <li key={genreId}>
-                  <FilmGenre genreId={genreId} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </header>
+          </header>
+          <p className="film__description">{overview}</p>
+          <Rate className="rate" disabled={isLoading} count={10} value={myRating} onChange={this.onRatingChange} />
+        </div>
 
         <img
           className="film__poster"
