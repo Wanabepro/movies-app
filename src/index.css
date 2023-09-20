@@ -30,3 +30,9 @@ ul {
   padding: 21px 32px;
   background-color: #fff;
 }
+
+@media (max-width: 900px) {
+  .container {
+    padding: 1.6rem;
+  }
+}

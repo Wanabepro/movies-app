@@ -3,9 +3,20 @@
   height: 100vh;
 }
 
-.search-message {
+.ant-tabs-nav {
   width: fit-content;
-  margin: 0 auto;
+  margin: 0 auto !important;
+  margin-bottom: 2rem !important;
+}
+
+.search-message {
+  text-align: center;
   font-size: 8rem;
   color: #827e7e;
+}
+
+@media (max-width: 900px) {
+  .search-message {
+    font-size: max(8vw, 4rem);
+  }
 }
