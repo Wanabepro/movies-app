@@ -49,6 +49,7 @@ class Api {
         options,
       )
 
+      localStorage.clear()
       localStorage.setItem('expiresAt', expiresAt)
       localStorage.setItem('sessionId', sessionId)
 
